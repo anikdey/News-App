@@ -25,6 +25,7 @@ object Versions {
     const val moshi = "1.12.0"
     const val moshiConverter = "2.9.0"
     const val stetho = "1.6.0"
+    const val loggingInterceptor = "3.1.0"
     const val sdpssp = "1.0.6"
     const val glide = "4.12.0"
     const val rxAndroid = "3.0.0"

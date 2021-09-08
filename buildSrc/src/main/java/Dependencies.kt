@@ -63,6 +63,10 @@ object Libraries {
     val stethoOkhttp by lazy { "com.facebook.stetho:stetho-okhttp3:${Versions.stetho}" }
     val stethoJSRhino by lazy { "com.facebook.stetho:stetho-js-rhino:${Versions.stetho}" }
 
+    //logging interceptor
+    val loggingInterceptor by lazy { "com.github.ihsanbal:LoggingInterceptor:${Versions.loggingInterceptor}" }
+
+
     // coroutines & coroutines-android
     val coroutinesCore by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutinesVersion}" }
     val coroutinesAndroid by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutinesVersion}" }
@@ -81,6 +85,7 @@ object Libraries {
     // hilt
     val hilt by lazy { "com.google.dagger:hilt-android:${Versions.hilt}" }
     val hiltCompiler by lazy { "com.google.dagger:hilt-compiler:${Versions.hilt}" }
+    //val hiltAnnotationProcessor by lazy { "com.google.dagger:hilt-android-compiler:${Versions.hilt}" }
     val hiltNavigationFragment by lazy { "androidx.hilt:hilt-navigation-fragment:${Versions.hiltNavigation}" }
 
 }

@@ -46,11 +46,12 @@ android {
 }
 
 dependencies {
+
     implementation(KotlinDependencies.kotlinStd)
 
     //hilt
     implementation(Libraries.hilt)
-    implementation(Libraries.hiltCompiler)
+    kapt(Libraries.hiltCompiler)
 
     // For local unit tests
     testImplementation("com.google.dagger:hilt-android-testing:2.38.1")
@@ -69,6 +70,10 @@ dependencies {
     implementation (Libraries.stetho)
     implementation (Libraries.stethoOkhttp)
     implementation (Libraries.stethoJSRhino)
+
+    implementation(Libraries.loggingInterceptor) {
+        this.exclude("org.json", "json")
+    }
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
