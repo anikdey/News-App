@@ -1,7 +1,14 @@
 package com.anik.network.response
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.anik.network.util.Constants
+
+@Entity(tableName = Constants.tableArticle)
 data class Article(
-    val author: Any,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null,
+    val author: String,
     val content: String,
     val description: String,
     val publishedAt: String,

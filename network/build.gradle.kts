@@ -56,6 +56,12 @@ dependencies {
     // For local unit tests
     testImplementation("com.google.dagger:hilt-android-testing:2.38.1")
 
+    //Room
+    implementation(AndroidXSupportDependencies.room)
+    //implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    kapt(AndroidXSupportDependencies.roomCompiler)
+    implementation(AndroidXSupportDependencies.roomCoroutinesSupport)
+
     //retrofit
     implementation(Libraries.retrofit)
     implementation(Libraries.retrofitMoshiConverter)

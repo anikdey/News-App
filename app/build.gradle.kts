@@ -58,7 +58,7 @@ dependencies {
 
     //Room
     implementation(AndroidXSupportDependencies.room)
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    //implementation("androidx.legacy:legacy-support-v4:1.0.0")
     kapt(AndroidXSupportDependencies.roomCompiler)
     implementation(AndroidXSupportDependencies.roomCoroutinesSupport)
 
