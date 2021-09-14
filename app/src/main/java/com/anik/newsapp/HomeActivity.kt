@@ -1,12 +1,22 @@
 package com.anik.newsapp
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.anik.newsapp.databinding.ActivityHomeBinding
-import com.app.core.base.activity.BaseActivity
+import com.anik.newsapp.ui.NewsViewModel
+import com.app.core.base.activity.AppActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class HomeActivity : BaseActivity<ActivityHomeBinding>() {
+@AndroidEntryPoint
+class HomeActivity : AppActivity<NewsViewModel, ActivityHomeBinding>() {
+
+    private val viewModel: NewsViewModel by viewModels()
+
+    override fun setViewModel(binding: ActivityHomeBinding) {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -13,7 +13,7 @@ import kotlin.properties.Delegates
 
 abstract class BaseFragment<DataBinding : ViewDataBinding> : Fragment() {
 
-    var dataBinding: DataBinding by Delegates.notNull()
+    var binding: DataBinding by Delegates.notNull()
 
     var baseCommunicator: BaseFragmentCommunicator? = null
 
@@ -30,9 +30,9 @@ abstract class BaseFragment<DataBinding : ViewDataBinding> : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        dataBinding = DataBindingUtil.inflate(inflater, layoutResourceId, container, false)
-        dataBinding.lifecycleOwner = viewLifecycleOwner
-        return dataBinding.root
+        binding = DataBindingUtil.inflate(inflater, layoutResourceId, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

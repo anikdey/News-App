@@ -3,7 +3,7 @@ plugins {
     id( "kotlin-android" )
     id( "kotlin-kapt" )
     id("kotlin-allopen")
-    //id("dagger.hilt.android.plugin")
+    id("dagger.hilt.android.plugin")
 }
 
 allOpen {
@@ -56,6 +56,13 @@ dependencies {
     implementation(MaterialDesignDependencies.materialDesign)
     implementation (AndroidXSupportDependencies.constraintLayout)
 
+    //hilt
+    implementation(Libraries.hilt)
+    kapt(Libraries.hiltCompiler)
+
+    // For local unit tests
+    testImplementation("com.google.dagger:hilt-android-testing:2.38.1")
+
     //Room
     implementation(AndroidXSupportDependencies.room)
     //implementation("androidx.legacy:legacy-support-v4:1.0.0")
@@ -79,6 +86,29 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":network"))
+
+    //retrofit
+    implementation(Libraries.retrofit)
+    implementation(Libraries.retrofitMoshiConverter)
+    implementation(Libraries.retrofitRxAdapter)
+
+    //moshi
+    implementation(Libraries.moshi)
+    implementation(Libraries.moshiConverter)
+    kapt(Libraries.moshiKotlinCodegen)
+
+    //Stetho https://github.com/facebook/stetho
+    implementation (Libraries.stetho)
+    implementation (Libraries.stethoOkhttp)
+    implementation (Libraries.stethoJSRhino)
+
+    implementation(Libraries.loggingInterceptor) {
+        this.exclude("org.json", "json")
+    }
+
+    implementation(Libraries.rxJava)
+    implementation(Libraries.rxAndroid)
+
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

@@ -5,7 +5,9 @@ import com.anik.newsapp.R
 import com.anik.newsapp.databinding.FragmentArticleBinding
 import com.anik.newsapp.databinding.FragmentBreakingNewsBinding
 import com.app.core.base.fragment.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ArticleFragment : BaseFragment<FragmentArticleBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +27,7 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>() {
     companion object {
 
         @JvmStatic
-        fun newInstance(param1: String, param2: String) = ArticleFragment().apply {
+        fun newInstance() = ArticleFragment().apply {
                 arguments = Bundle().apply {
 
                 }

@@ -52,7 +52,7 @@ object WebServiceModule {
             .tag("NEWS_APP")
             .request("Request")
             .response("Response")
-            //.addQueryParam("apiKey", Constants.API_KEY)
+            .addQueryParam("apiKey", Constants.API_KEY)
             //.addHeader("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 ")
         builder.isDebugAble = isDebuggingEnabled
         return builder.build()

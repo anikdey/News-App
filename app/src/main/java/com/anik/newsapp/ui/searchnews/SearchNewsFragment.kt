@@ -1,11 +1,27 @@
 package com.anik.newsapp.ui.searchnews
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.activityViewModels
 import com.anik.newsapp.R
 import com.anik.newsapp.databinding.FragmentSearchNewsBinding
-import com.app.core.base.fragment.BaseFragment
+import com.anik.newsapp.ui.NewsAdapter
+import com.anik.newsapp.ui.NewsViewModel
+import com.app.core.base.fragment.AppFragment
+import com.app.core.util.Constants
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class SearchNewsFragment : BaseFragment<FragmentSearchNewsBinding>() {
+@AndroidEntryPoint
+class SearchNewsFragment : AppFragment<NewsViewModel, FragmentSearchNewsBinding>() {
+
+    //private val viewModel: NewsViewModel by viewModels()
+    private val viewModel: NewsViewModel by activityViewModels()
+    private var newsAdapter: NewsAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -14,11 +30,77 @@ class SearchNewsFragment : BaseFragment<FragmentSearchNewsBinding>() {
         }
     }
 
+    override fun setViewModel(binding: FragmentSearchNewsBinding) {
+        binding.viewModel = viewModel
+    }
+
     override val layoutResourceId: Int
         get() = R.layout.fragment_search_news
 
     override fun init() {
 
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        setUpObservers()
+        setUpRecyclerView()
+
+        var job: Job? = null
+
+        binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                job?.cancel()
+                job = MainScope().launch {
+                    delay(Constants.DELAY)
+                    query?.let {
+                        if(it.isNotEmpty())
+                            viewModel.searchNews(it)
+                    }
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                job?.cancel()
+                job = MainScope().launch {
+                    delay(Constants.DELAY)
+                    newText?.let {
+                        if(it.isNotEmpty())
+                            viewModel.searchNews(it)
+                    }
+                }
+                return true
+            }
+
+        })
+
+    }
+
+    private fun setUpObservers() {
+
+        viewModel.searchNewsLiveData.observe(viewLifecycleOwner, {newsResponse->
+
+            newsAdapter?.differ?.submitList(newsResponse.articles)
+
+        })
+
+        viewModel.showLoader.observe(viewLifecycleOwner,  {
+            if(it)
+                baseCommunicator?.showLoader()
+            else
+                baseCommunicator?.hideLoader()
+        })
+
+        viewModel.toastMessage.observe(viewLifecycleOwner, {
+            baseCommunicator?.showToast(it)
+        })
+
+    }
+
+    private fun setUpRecyclerView() {
+        newsAdapter = NewsAdapter()
+        binding.recyclerView.apply {
+            adapter = newsAdapter
+        }
     }
 
     companion object {

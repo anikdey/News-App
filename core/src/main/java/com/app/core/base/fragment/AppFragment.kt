@@ -20,6 +20,6 @@ abstract class AppFragment<ViewModel : BaseViewModel, DataBinding : ViewDataBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setViewModel(dataBinding)
+        setViewModel(binding)
     }
 }

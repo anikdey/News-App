@@ -6,13 +6,15 @@ interface BaseFragmentCommunicator {
 
     fun showToast(message: String?)
 
+    fun showLoader()
+
+    fun hideLoader()
+
 //    fun hideActionBar()
 //
 //    fun setActionTitle(title: String)
 //
-//    fun showLoader()
-//
-//    fun hideLoader()
+
 //
 //    fun showSoftKeyboard(editText: EditText)
 //

@@ -1,18 +1,27 @@
 package com.anik.newsapp.ui.savednews
 
 import android.os.Bundle
+import androidx.fragment.app.viewModels
 import com.anik.newsapp.R
-import com.anik.newsapp.databinding.FragmentBreakingNewsBinding
 import com.anik.newsapp.databinding.FragmentSavedNewsBinding
-import com.app.core.base.fragment.BaseFragment
+import com.anik.newsapp.ui.NewsViewModel
+import com.app.core.base.fragment.AppFragment
+import dagger.hilt.android.AndroidEntryPoint
 
-class SavedNewsFragment : BaseFragment<FragmentSavedNewsBinding>() {
+@AndroidEntryPoint
+class SavedNewsFragment : AppFragment<NewsViewModel, FragmentSavedNewsBinding>() {
+
+    private val viewModel: NewsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
 
         }
+    }
+
+    override fun setViewModel(binding: FragmentSavedNewsBinding) {
+        binding.viewModel = viewModel
     }
 
     override val layoutResourceId: Int
@@ -25,7 +34,7 @@ class SavedNewsFragment : BaseFragment<FragmentSavedNewsBinding>() {
     companion object {
 
         @JvmStatic
-        fun newInstance(param1: String, param2: String) = SavedNewsFragment().apply {
+        fun newInstance() = SavedNewsFragment().apply {
                 arguments = Bundle().apply {
 
                 }

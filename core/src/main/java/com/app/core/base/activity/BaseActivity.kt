@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.app.core.base.dialog.LoaderDialog
 import com.app.core.base.fragment.BaseFragmentCommunicator
 import kotlin.properties.Delegates
 
@@ -15,6 +16,7 @@ abstract class BaseActivity<DataBinding: ViewDataBinding> : AppCompatActivity(),
 
     var binding: DataBinding by Delegates.notNull()
     var baseCommunicator: BaseFragmentCommunicator? = null
+    private val loaderDialog by lazy { LoaderDialog(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,4 +37,11 @@ abstract class BaseActivity<DataBinding: ViewDataBinding> : AppCompatActivity(),
         } }
     }
 
+    override fun showLoader() {
+        runOnUiThread { if (!loaderDialog.isShowing) loaderDialog.show() }
+    }
+
+    override fun hideLoader() {
+        runOnUiThread { if (loaderDialog.isShowing) loaderDialog.dismiss() }
+    }
 }

@@ -1,15 +1,19 @@
 package com.anik.network.di
 
+import com.anik.network.repositories.news.INewsRepository
+import com.anik.network.repositories.news.NewsRepositoryImpl
+import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class  RepositoryModule {
 
-//    @Binds
-//    @Singleton
-//    abstract fun provideRepository(api: GifRepositoryImpl): GifRepository
+    @Binds
+    @Singleton
+    abstract fun provideRepository(repository: NewsRepositoryImpl): INewsRepository
 
 }
