@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.anik.newsapp.R
 import com.anik.newsapp.databinding.FragmentSearchNewsBinding
 import com.anik.newsapp.ui.NewsAdapter
@@ -97,7 +98,12 @@ class SearchNewsFragment : AppFragment<NewsViewModel, FragmentSearchNewsBinding>
     }
 
     private fun setUpRecyclerView() {
-        newsAdapter = NewsAdapter()
+        newsAdapter = NewsAdapter().apply {
+            setOnItemClickListener {
+                val action = SearchNewsFragmentDirections.actionSearchNewsFragmentToArticleFragment(it)
+                findNavController().navigate(action)
+            }
+        }
         binding.recyclerView.apply {
             adapter = newsAdapter
         }

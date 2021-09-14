@@ -3,6 +3,7 @@ package com.anik.newsapp.ui
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.anik.network.repositories.news.INewsRepository
+import com.anik.network.response.Article
 import com.anik.network.response.NewsResponse
 import com.anik.network.util.Resource
 import com.app.core.base.viewmodel.BaseViewModel
@@ -68,6 +69,10 @@ class NewsViewModel @Inject constructor(
         return Resource.Error(response.message())
     }
 
+
+    fun saveArticle(article: Article) {
+
+    }
 
 
 }

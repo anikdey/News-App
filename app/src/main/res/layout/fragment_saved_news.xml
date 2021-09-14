@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="viewModel"
@@ -13,11 +13,50 @@
         tools:context=".ui.savednews.SavedNewsFragment">
 
 
-
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
+            style="@style/AppBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Saved news "/>
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:contentInsetStartWithNavigation="0dp"
+                app:titleMarginStart="0dp"
+                android:background="@color/colorPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/titleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="@string/saved_news"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        tools:text="Saved News" />
+
+                </RelativeLayout>
+
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            tools:listitem="@layout/item_news"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/appBar"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -6,6 +6,7 @@ plugins {
     id("kotlin-kapt")
     id("kotlin-allopen")
     id("dagger.hilt.android.plugin")
+    id("kotlin-parcelize")
 }
 
 allOpen {

@@ -2,7 +2,7 @@ object Versions {
 
     const val gradlePlugin = "7.0.2"
     const val kotlin = "1.5.21"
-    const val navigation = "2.3.0-alpha01"
+    const val navigation = "2.3.5"
     const val timber = "4.7.1"
     const val material = "1.3.0"
     const val appCompat = "1.3.1"

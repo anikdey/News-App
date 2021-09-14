@@ -3,8 +3,8 @@ package com.anik.newsapp.ui.breakingnews
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.anik.network.util.Resource
 import com.anik.newsapp.R
 import com.anik.newsapp.databinding.FragmentBreakingNewsBinding
@@ -44,7 +44,12 @@ class BreakingNewsFragment : AppFragment<NewsViewModel, FragmentBreakingNewsBind
     }
 
     private fun setUpRecyclerView() {
-        newsAdapter = NewsAdapter()
+        newsAdapter = NewsAdapter().apply {
+            setOnItemClickListener {
+                val action = BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleFragment(it)
+                findNavController().navigate(action)
+            }
+        }
         binding.recyclerView.apply {
             adapter = newsAdapter
         }

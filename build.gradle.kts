@@ -9,6 +9,7 @@ buildscript {
         classpath (BuildPlugins.kotlinPlugins)
         classpath (BuildPlugins.hiltPlugin)
         classpath (BuildPlugins.allOpenPlugin)
+        classpath (BuildPlugins.navigationSafeArg)
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
