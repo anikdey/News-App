@@ -53,7 +53,7 @@ object WebServiceModule {
             .request("Request")
             .response("Response")
             .addQueryParam("apiKey", Constants.API_KEY)
-            //.addHeader("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 ")
+            //.addHeader("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
         builder.isDebugAble = isDebuggingEnabled
         return builder.build()
     }
@@ -67,6 +67,7 @@ object WebServiceModule {
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            //.addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(okHttpClient)
             .build()
     }

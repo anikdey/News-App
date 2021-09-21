@@ -7,12 +7,8 @@ import com.anik.network.response.Article
 import com.anik.network.response.NewsResponse
 import com.anik.network.util.Resource
 import com.app.core.base.viewmodel.BaseViewModel
-import com.app.core.base.viewmodel.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,58 +17,77 @@ class NewsViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     var breakingNewsPage = 1
-    val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
+    val breakingNewsLiveData: MutableLiveData<NewsResponse> = MutableLiveData()
+    private var breakingNewsResponse: NewsResponse? = null
 
     var searchNewsPage = 1
     val searchNewsLiveData by lazy { MutableLiveData<NewsResponse>() }
+    private var searchNewsResponse: NewsResponse? = null
 
     init {
         getBreakingNews("us")
     }
 
     fun getBreakingNews(countryCode: String) = viewModelScope.launch {
-        breakingNews.postValue(Resource.Loading())
+        showLoader.value = true
         val response = newsRepository.getBreakingNews(countryCode, breakingNewsPage)
-        breakingNews.postValue(handleBreakingNewsResponse(response))
-    }
-
-    private fun handleBreakingNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
-        if(response.isSuccessful) {
-            response.body()?.let {
-                return Resource.Success(it)
+        showLoader.value = false
+        when(response) {
+            is Resource.Success -> {
+                response.data?.let {newsResponse->
+                    breakingNewsPage++
+                    if(breakingNewsResponse == null) {
+                        breakingNewsResponse = newsResponse
+                    } else {
+                        val oldArticles = breakingNewsResponse?.articles
+                        val newArticles = newsResponse.articles
+                        oldArticles?.addAll(newArticles)
+                    }
+                    breakingNewsLiveData.value = breakingNewsResponse
+                }
+            }
+            else -> {
+                handleError(response)
             }
         }
-        return Resource.Error(response.message())
     }
 
-    fun searchNews(query: String) {
-        var disposable = newsRepository.searchNews(query, searchNewsPage)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { showLoader.postValue(true) }
-            .doOnError { showLoader.postValue(false) }
-            .doFinally { showLoader.postValue(false) }
-            .subscribe({
-                searchNewsLiveData.postValue(it)
-            }, {
-                toastMessage.postValue(it.message)
-            })
-        compositeDisposable.add(disposable)
-    }
-
-    private fun handleSearchNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
-        if(response.isSuccessful) {
-            response.body()?.let {
-                return Resource.Success(it)
+    fun searchNews(query: String) = viewModelScope.launch {
+        showLoader.value = true
+        val response = newsRepository.searchNews(query, searchNewsPage)
+        showLoader.value = false
+        when(response) {
+            is Resource.Success -> {
+                response.data?.let { newsResponse ->
+                    searchNewsPage++
+                    if(searchNewsResponse == null) {
+                        searchNewsResponse = newsResponse
+                    } else {
+                        val oldArticles = searchNewsResponse?.articles
+                        val newArticles = newsResponse.articles
+                        oldArticles?.addAll(newArticles)
+                    }
+                    searchNewsLiveData.value = searchNewsResponse
+                }
+            }
+            else -> {
+                handleError(response)
             }
         }
-        return Resource.Error(response.message())
     }
 
+    fun getSavedNews() = newsRepository.getArticles()
 
     fun saveArticle(article: Article) {
-
+        viewModelScope.launch {
+            newsRepository.insert(article)
+        }
     }
 
+    fun deleteArticle(article: Article) {
+        viewModelScope.launch {
+            newsRepository.deleteArticle(article)
+        }
+    }
 
 }

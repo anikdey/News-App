@@ -49,6 +49,8 @@ dependencies {
     implementation(MaterialDesignDependencies.materialDesign)
     implementation (AndroidXSupportDependencies.constraintLayout)
 
+    implementation(project(":network"))
+
     implementation(Libraries.rxJava)
 
     testImplementation("junit:junit:4.+")

@@ -39,13 +39,11 @@ class SearchNewsFragment : AppFragment<NewsViewModel, FragmentSearchNewsBinding>
         get() = R.layout.fragment_search_news
 
     override fun init() {
-
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
         setUpObservers()
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
         setUpRecyclerView()
 
         var job: Job? = null
-
         binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
 
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -79,22 +77,19 @@ class SearchNewsFragment : AppFragment<NewsViewModel, FragmentSearchNewsBinding>
     private fun setUpObservers() {
 
         viewModel.searchNewsLiveData.observe(viewLifecycleOwner, {newsResponse->
-
             newsAdapter?.differ?.submitList(newsResponse.articles)
-
-        })
-
-        viewModel.showLoader.observe(viewLifecycleOwner,  {
-            if(it)
-                baseCommunicator?.showLoader()
-            else
-                baseCommunicator?.hideLoader()
         })
 
         viewModel.toastMessage.observe(viewLifecycleOwner, {
             baseCommunicator?.showToast(it)
         })
 
+        viewModel.showLoader.observe(viewLifecycleOwner, {
+            if(it)
+                baseCommunicator?.showLoader()
+            else
+                baseCommunicator?.hideLoader()
+        })
     }
 
     private fun setUpRecyclerView() {

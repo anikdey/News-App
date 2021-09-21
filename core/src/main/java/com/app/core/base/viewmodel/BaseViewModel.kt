@@ -3,6 +3,7 @@ package com.app.core.base.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import com.anik.network.util.Resource
 
 open class BaseViewModel : ViewModel() {
 
@@ -17,17 +18,14 @@ open class BaseViewModel : ViewModel() {
         compositeDisposable.dispose()
     }
 
+    protected fun<T> handleError(response: Resource<T>) {
+        when(response) {
+            is Resource.NetworkError -> { toastMessage.value = response.message}
+            is Resource.GenericError -> { toastMessage.value = "${response.error?.message}" }
+            else -> {
 
-//    protected fun checkNetwork(context: Context): Boolean {
-//        var isNetworkAvailable = isNetworkAvailable(context)
-//        if(!isNetworkAvailable){
-//            toastMessage.postValue(context.getString(R.string.check_internet_connection))
-//        }
-//        return isNetworkAvailable
-//    }
-
-    protected fun handleError(throwable: Throwable) {
-        //snackBarMessage.value = SnackBarMessage(throwable.message)
+            }
+        }
     }
 
 
