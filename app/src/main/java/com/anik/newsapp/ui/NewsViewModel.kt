@@ -2,7 +2,7 @@ package com.anik.newsapp.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.anik.network.repositories.news.INewsRepository
+import com.anik.network.repositories.news.NewsRepository
 import com.anik.network.response.Article
 import com.anik.network.response.NewsResponse
 import com.anik.network.util.Resource
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(
-    private val newsRepository: INewsRepository
+    private val newsRepository: NewsRepository
 ) : BaseViewModel() {
 
     var breakingNewsPage = 1
@@ -24,33 +24,6 @@ class NewsViewModel @Inject constructor(
     val searchNewsLiveData by lazy { MutableLiveData<NewsResponse>() }
     private var searchNewsResponse: NewsResponse? = null
 
-    init {
-        getBreakingNews("us")
-    }
-
-    fun getBreakingNews(countryCode: String) = viewModelScope.launch {
-        showLoader.value = true
-        val response = newsRepository.getBreakingNews(countryCode, breakingNewsPage)
-        showLoader.value = false
-        when(response) {
-            is Resource.Success -> {
-                response.data?.let {newsResponse->
-                    breakingNewsPage++
-                    if(breakingNewsResponse == null) {
-                        breakingNewsResponse = newsResponse
-                    } else {
-                        val oldArticles = breakingNewsResponse?.articles
-                        val newArticles = newsResponse.articles
-                        oldArticles?.addAll(newArticles)
-                    }
-                    breakingNewsLiveData.value = breakingNewsResponse
-                }
-            }
-            else -> {
-                handleError(response)
-            }
-        }
-    }
 
     fun searchNews(query: String) = viewModelScope.launch {
         showLoader.value = true
@@ -71,7 +44,7 @@ class NewsViewModel @Inject constructor(
                 }
             }
             else -> {
-                handleError(response)
+                //handleError(response)
             }
         }
     }

@@ -2,11 +2,6 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
-    id("kotlin-allopen")
-}
-
-allOpen {
-    annotation ("com.mobimeo.codingchallenge.test.OpenClass")
 }
 
 android {
@@ -20,10 +15,6 @@ android {
     defaultConfig {
         minSdk = Config.minSdkVersion
         targetSdk = Config.targetSdkVersion
-//        versionCode 1
-//        versionName "1.0"
-
-        //testInstrumentationRunner ("androidx.test.runner.AndroidJUnitRunner")
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -48,10 +39,6 @@ dependencies {
     implementation(AndroidXSupportDependencies.appCompat)
     implementation(MaterialDesignDependencies.materialDesign)
     implementation (AndroidXSupportDependencies.constraintLayout)
-
-    implementation(project(":network"))
-
-    implementation(Libraries.rxJava)
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

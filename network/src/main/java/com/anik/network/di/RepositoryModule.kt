@@ -1,6 +1,6 @@
 package com.anik.network.di
 
-import com.anik.network.repositories.news.INewsRepository
+import com.anik.network.repositories.news.NewsRepository
 import com.anik.network.repositories.news.NewsRepositoryImpl
 import dagger.Binds
 import dagger.Module
@@ -14,6 +14,6 @@ abstract class  RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun provideRepository(repository: NewsRepositoryImpl): INewsRepository
+    abstract fun provideRepository(repository: NewsRepositoryImpl): NewsRepository
 
 }

@@ -1,16 +1,9 @@
-import Versions.allOpen
-
 plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
-    id("kotlin-allopen")
     id("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
-}
-
-allOpen {
-    annotation ("com.mobimeo.codingchallenge.test.OpenClass")
 }
 
 android {
@@ -20,11 +13,6 @@ android {
     defaultConfig {
         minSdk = Config.minSdkVersion
         targetSdk = Config.targetSdkVersion
-
-//        versionCode = Config.versionCode
-//        versionName = Config.versionName
-
-        //testInstrumentationRunner("androidx.test.runner.AndroidJUnitRunner")
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -54,12 +42,8 @@ dependencies {
     implementation(Libraries.hilt)
     kapt(Libraries.hiltCompiler)
 
-    // For local unit tests
-    testImplementation("com.google.dagger:hilt-android-testing:2.38.1")
-
     //Room
     implementation(AndroidXSupportDependencies.room)
-    //implementation("androidx.legacy:legacy-support-v4:1.0.0")
     kapt(AndroidXSupportDependencies.roomCompiler)
     implementation(AndroidXSupportDependencies.roomCoroutinesSupport)
 
@@ -81,6 +65,12 @@ dependencies {
     implementation(Libraries.loggingInterceptor) {
         this.exclude("org.json", "json")
     }
+
+
+
+    // For local unit tests
+    testImplementation("com.google.dagger:hilt-android-testing:2.38.1")
+
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

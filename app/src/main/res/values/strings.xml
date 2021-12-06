@@ -4,4 +4,6 @@
     <string name="breaking_news">Breaking News</string>
     <string name="saved_news">Saved News</string>
     <string name="type_here">Type here to search</string>
+    <string name="retry">Retry</string>
+    <string name="no_news_found">No news found</string>
 </resources>

@@ -1,25 +1,35 @@
 package com.anik.newsapp.ui.breakingnews
 
 import android.os.Bundle
-import android.widget.AbsListView
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.activityViewModels
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.paging.LoadState
 import com.anik.newsapp.R
 import com.anik.newsapp.databinding.FragmentBreakingNewsBinding
-import com.anik.newsapp.ui.NewsAdapter
-import com.anik.newsapp.ui.NewsViewModel
-import com.anik.newsapp.util.Constants
+import com.anik.newsapp.ui.stateadapter.LoadStateAdapter
 import com.app.core.base.fragment.AppFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BreakingNewsFragment : AppFragment<NewsViewModel, FragmentBreakingNewsBinding>() {
+class BreakingNewsFragment : AppFragment<BreakingNewsViewModel, FragmentBreakingNewsBinding>() {
 
-    private val viewModel: NewsViewModel by activityViewModels()
-    private var newsAdapter: NewsAdapter? = null
+    private val viewModel: BreakingNewsViewModel by viewModels()
+
+    private var newsAdapter = BreakingNewsPagedAdapter().apply {
+        setOnItemClickListener {
+            val action = BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleFragment(it)
+            findNavController().navigate(action)
+        }
+    }
+    private val headerAdapter = LoadStateAdapter(newsAdapter::retry)
+    private val footerAdapter = LoadStateAdapter(newsAdapter::retry)
+    private val concatAdapter = newsAdapter.withLoadStateHeaderAndFooter(
+        header = headerAdapter,
+        footer = footerAdapter
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,27 +49,42 @@ class BreakingNewsFragment : AppFragment<NewsViewModel, FragmentBreakingNewsBind
         setUpObservers()
         setUpRecyclerView()
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+
+        binding.retryButton.setOnClickListener {
+            newsAdapter.retry()
+        }
+
+        if(viewModel.breakingNewsLiveData.value == null) {
+            viewModel.getBreakingNews("us")
+        }
+
     }
 
     private fun setUpRecyclerView() {
-        newsAdapter = NewsAdapter().apply {
-            setOnItemClickListener {
-                val action = BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleFragment(it)
-                findNavController().navigate(action)
+        newsAdapter.addLoadStateListener { combinedLoadStates ->
+            binding.progressBar.isVisible = combinedLoadStates.refresh is LoadState.Loading
+            binding.recyclerView.isVisible = combinedLoadStates.refresh is LoadState.NotLoading
+            binding.retryContainer.isVisible = combinedLoadStates.refresh is LoadState.Error
+            if(combinedLoadStates.refresh is LoadState.Error) {
+                binding.errorMessageTextView.text = (combinedLoadStates.refresh as LoadState.Error).error.localizedMessage
+            }
+            if(combinedLoadStates.refresh is LoadState.NotLoading && combinedLoadStates.append.endOfPaginationReached && newsAdapter.itemCount<1) {
+                binding.recyclerView.isVisible = false
+                binding.emptyDataTextView.visibility = View.VISIBLE
+            } else {
+                binding.emptyDataTextView.visibility = View.GONE
             }
         }
+
         binding.recyclerView.apply {
-            adapter = newsAdapter
-            addOnScrollListener(this@BreakingNewsFragment.scrollListener)
+            adapter = concatAdapter
         }
     }
 
     private fun setUpObservers() {
 
-        viewModel.breakingNewsLiveData.observe(viewLifecycleOwner, { newsResponse ->
-            newsAdapter?.differ?.submitList(newsResponse.articles.toList())
-            val totalPages = newsResponse.totalResults / Constants.QUERY_PAGE_SIZE + 2
-            isLastPage = viewModel.breakingNewsPage == totalPages
+        viewModel.breakingNewsLiveData.observe(viewLifecycleOwner, {
+            newsAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         })
 
         viewModel.toastMessage.observe(viewLifecycleOwner, {
@@ -74,52 +99,4 @@ class BreakingNewsFragment : AppFragment<NewsViewModel, FragmentBreakingNewsBind
         })
     }
 
-    var isLoading = false
-    var isLastPage = false
-    var isScrolling = false
-
-    var scrollListener = object : RecyclerView.OnScrollListener() {
-
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-
-            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-
-            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-            val visibleItemCount = layoutManager.childCount
-            val totalItemCount = layoutManager.itemCount
-
-            val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
-            val isAtLastItem = visibleItemCount + firstVisibleItemPosition >= totalItemCount
-            val isNotAtBeginning = firstVisibleItemPosition >= 0
-            val isTotalMoreThanVisible = totalItemCount >= Constants.QUERY_PAGE_SIZE
-
-            val shouldPaginate = isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
-
-            if(shouldPaginate) {
-                viewModel.getBreakingNews("us")
-                isScrolling = false
-            } else {
-                binding.recyclerView.setPadding(0,0,0,0)
-            }
-
-        }
-
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                isScrolling = true
-            }
-        }
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance() = BreakingNewsFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
-    }
 }

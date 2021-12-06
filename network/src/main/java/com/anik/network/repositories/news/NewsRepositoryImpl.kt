@@ -15,13 +15,13 @@ class NewsRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val articleDao: ArticleDao,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : INewsRepository, BaseRepository() {
+) : NewsRepository, BaseRepository() {
 
-    override suspend fun getBreakingNews(countryCode: String, pageNumber: Int): Resource<out NewsResponse> {
-        return safeApiCall(ioDispatcher){ apiService.getBreakingNews("us", 2) }
+    override suspend fun getBreakingNews(countryCode: String, pageNumber: Int): Resource<NewsResponse> {
+        return safeApiCall(ioDispatcher){ apiService.getBreakingNews("us", pageNumber) }
     }
 
-    override suspend fun searchNews(searchQuery: String, pageNumber: Int): Resource<out NewsResponse> {
+    override suspend fun searchNews(searchQuery: String, pageNumber: Int): Resource<NewsResponse> {
         return safeApiCall(ioDispatcher){ apiService.searchNews(searchQuery, pageNumber) }
     }
 

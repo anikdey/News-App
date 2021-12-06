@@ -2,13 +2,13 @@ plugins {
     id( "com.android.application" )
     id( "kotlin-android" )
     id( "kotlin-kapt" )
-    id("kotlin-allopen")
-    id("dagger.hilt.android.plugin")
-    id("androidx.navigation.safeargs")
+    id( "kotlin-allopen" )
+    id( "dagger.hilt.android.plugin" )
+    id( "androidx.navigation.safeargs" )
 }
 
 allOpen {
-    annotation ("com.mobimeo.codingchallenge.test.OpenClass")
+    //annotation ("com.mobimeo.codingchallenge.test.OpenClass")
 }
 
 android {
@@ -18,6 +18,7 @@ android {
 
     buildFeatures {
         dataBinding = true
+        viewBinding = true
     }
 
     defaultConfig {
@@ -66,7 +67,6 @@ dependencies {
 
     //Room
     implementation(AndroidXSupportDependencies.room)
-    //implementation("androidx.legacy:legacy-support-v4:1.0.0")
     kapt(AndroidXSupportDependencies.roomCompiler)
     implementation(AndroidXSupportDependencies.roomCoroutinesSupport)
 
@@ -77,6 +77,10 @@ dependencies {
     // Navigation Components
     implementation(AndroidXSupportDependencies.navigationFragmentKtx)
     implementation(AndroidXSupportDependencies.navigationUI)
+
+    //paging3
+    implementation("androidx.paging:paging-runtime-ktx:3.0.1") //3.1.0
+    testImplementation("androidx.paging:paging-common:3.0.1")
 
     // Coroutines lifecycle scopes
     //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
@@ -103,13 +107,12 @@ dependencies {
     implementation (Libraries.stethoOkhttp)
     implementation (Libraries.stethoJSRhino)
 
+    implementation(Libraries.ssp)
+    implementation(Libraries.sdp)
+
     implementation(Libraries.loggingInterceptor) {
         this.exclude("org.json", "json")
     }
-
-    implementation(Libraries.rxJava)
-    implementation(Libraries.rxAndroid)
-
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
